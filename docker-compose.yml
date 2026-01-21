@@ -1,0 +1,31 @@
+
+
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: dockerfiles/Dockerfile
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: dockerfiles/Dockerfile
+    ports:
+      - "3000:3000"
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: akash
+      POSTGRES_DB: chief_ai
+    ports:
+      - "5432:5432"
+
+
+volumes:
+  pgdata:
