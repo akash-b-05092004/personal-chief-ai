@@ -21,7 +21,7 @@ jobs:
       # 3. Build Frontend Docker image
       - name: Build Frontend Docker Image
         run: |
-          docker build -t frontend-app ./frontend
+          docker build -t frontend-app ./frontend1
 
       # 4. Build Backend Docker image
       - name: Build Backend Docker Image
