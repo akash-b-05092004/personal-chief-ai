@@ -1,0 +1,47 @@
+name: CI Pipeline (Docker + Terraform)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout repository (git clone)
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. Setup Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # 3. Build Frontend Docker image
+      - name: Build Frontend Docker Image
+        run: |
+          docker build -t frontend-app ./frontend
+
+      # 4. Build Backend Docker image
+      - name: Build Backend Docker Image
+        run: |
+          docker build -t backend-app ./backend
+
+      # 5. Verify Docker images
+      - name: List Docker Images
+        run: docker images
+
+      # 6. Setup Terraform
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      # 7. Terraform Init (NO backend, NO AWS calls)
+      - name: Terraform Init
+        working-directory: terraform
+        run: terraform init -backend=false
+
+      # 8. Terraform Validate (syntax & config check)
+      - name: Terraform Validate
+        working-directory: terraform
+        run: terraform validate
